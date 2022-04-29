@@ -113,6 +113,7 @@ msg "Extracting disk image..."
 case $FILE in
   *"gz") gunzip -f $FILE;;
   *"xz") xz -d $FILE;;
+  *"zip") unzip $FILE;;
   *) die "Unable to handle file extension '${FILE##*.}'.";;
 esac
 
@@ -131,7 +132,8 @@ done
 
 # Create VM
 msg "Creating VM..."
-VM_NAME=$(sed -e "s/\_//g" -e "s/.${RELEASE_TYPE}.*$//" <<< $FILE)
+# VM_NAME=$(sed -e "s/\_//g" -e "s/.${RELEASE_TYPE}.*$//" <<< $FILE)
+VM_NAME="HomeAssistant"
 qm create $VMID -agent 1 -bios ovmf -name $VM_NAME -net0 virtio,bridge=vmbr0 \
   -onboot 1 -ostype l26 -scsihw virtio-scsi-pci
 pvesm alloc $STORAGE $VMID $DISK0 128 1>&/dev/null
